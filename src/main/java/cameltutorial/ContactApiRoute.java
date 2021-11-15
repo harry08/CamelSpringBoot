@@ -18,6 +18,7 @@ public class ContactApiRoute extends RouteBuilder {
     public void configure() throws Exception {
         restConfiguration()
                 .component("servlet")
+                .dataFormatProperty("prettyPrint", "true")
                 .bindingMode(RestBindingMode.json);
 
         onException(ContactNotFoundException.class)
