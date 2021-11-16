@@ -12,14 +12,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/spring")
 public class ContactsController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ContactsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactsController.class);
 
-    private ContactService contactService;
+    private final ContactService contactService;
+
+    public ContactsController(ContactService contactService) {
+        this.contactService = contactService;
+    }
 
     @GetMapping("/contacts")
     public Collection<Contact> getContacts() {
@@ -41,7 +44,6 @@ public class ContactsController {
     @PostMapping("/contacts")
     public Contact createContact(@RequestBody Contact contact) {
         LOGGER.info("createContact called...");
-        Contact createdContact = contactService.createContact(contact);
-        return createdContact;
+        return contactService.createContact(contact);
     }
 }
