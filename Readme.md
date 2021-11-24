@@ -34,10 +34,14 @@ Exceptions occuring in the service implementation are catched and transformed in
 More onXYExceptions can be implemented. 
 And also onException for any other not caught Exception
 
-### Documentation
-The service can also be documented using Swagger.
-This can be done with the method .apicontextPath("api-doc") in the rest configuration.
+### Service documentation
+The service is documented using OpenAPI/Swagger.
+Therefore the method .apicontextPath("/api-doc") is used in the rest configuration.
 Each method can then be documented with the method .description("Method description").
+
+- Access the OpenAPI json of the Contact Rest API - `http://localhost:8080/camel/api-doc/camel-1`
+- Access the OpenAPI yaml of the Contact Rest API - `http://localhost:8080/camel/api-doc/camel-1/swagger.yaml`
+- Open the Swagger UI - `http://localhost:8080/webjars/swagger-ui/index.html?url=/camel/api-doc/camel-1&validatorUrl=#/`
 
 ## Benefits of Camel Rest DSL
 - Can be used independently from the underlying container. e.g. also usable with Quarkus.
@@ -70,4 +74,6 @@ Message body for creating a contact:
 
 # Documentation
 
-- `https://camel.apache.org/manual/rest-dsl.html`
+- [Camel Documentation - Camel Rest DSL](https://camel.apache.org/manual/rest-dsl.html)
+- [Medium article - Swagger for Camel with Spring Boot](https://medium.com/@bszeti/swagger-with-spring-boot-and-camel-ac59cca9556e)
+

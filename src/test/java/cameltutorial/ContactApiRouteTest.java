@@ -5,6 +5,7 @@ import cameltutorial.service.ContactService;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.support.DefaultRegistry;
 import org.apache.camel.test.junit5.CamelTestSupport;
@@ -18,7 +19,7 @@ import java.util.Collections;
 /**
  * Tests the Camel Rest endpoints.
  * The call to the ContactService is intercepted using AdviceRouteBuilder. Within this advice the call is directed to a MockEndpoint.
- * With this approach the route itself can be tested.
+ * With this approach only the route itself is tested.
  */
 public class ContactApiRouteTest extends CamelTestSupport {
 
@@ -36,7 +37,7 @@ public class ContactApiRouteTest extends CamelTestSupport {
                         .to("mock:getContacts");
             }
         };
-        context.adviceWith(context.getRouteDefinitions().get(0), getContactsRoute);
+        context.adviceWith(getRouteDefinition("rest:get:/contacts?"), getContactsRoute);
 
         AdviceWithRouteBuilder getContactRoute = new AdviceWithRouteBuilder() {
             @Override
@@ -48,7 +49,7 @@ public class ContactApiRouteTest extends CamelTestSupport {
                         .to("mock:getContact");
             }
         };
-        context.adviceWith(context.getRouteDefinitions().get(1), getContactRoute);
+        context.adviceWith(getRouteDefinition("rest:get:/contacts:{id}?"), getContactRoute);
 
         AdviceWithRouteBuilder createContactRoute = new AdviceWithRouteBuilder() {
             @Override
@@ -60,7 +61,7 @@ public class ContactApiRouteTest extends CamelTestSupport {
                         .to("mock:createContact");
             }
         };
-        context.adviceWith(context.getRouteDefinitions().get(2), createContactRoute);
+        context.adviceWith(getRouteDefinition("rest:post:/contacts?"), createContactRoute);
     }
 
     @Override
@@ -133,5 +134,15 @@ public class ContactApiRouteTest extends CamelTestSupport {
     @Override
     public boolean isUseAdviceWith() {
         return true;
+    }
+
+    private RouteDefinition getRouteDefinition(String restDefinition) {
+        for (RouteDefinition routeDefinition : context.getRouteDefinitions()) {
+            if (routeDefinition.getInput().getUri().contains(restDefinition)) {
+                return routeDefinition;
+            }
+        }
+
+        return null;
     }
 }
